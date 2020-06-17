@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"   xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core">
+    <h:head>
+        <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+        <script id="MathJax-script"
+                src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
+        </script>
+        <link href="css/stylesheet.css" rel="stylesheet" type="text/css" />
+        <h1>Quiz Review</h1>
+    </h:head>
+    
+    <h:body>
+        <h2>Quiz: #{quiz.getViewedQuiz().getQuizId()}</h2>
+        
+        <p>You got a #{quiz.numCorrect/quiz.numQuestions * 100}% on this test.</p>       
+        
+        <br></br>
+        
+        <h2>Question Reviews</h2>
+        <h:dataTable value="#{quiz.getViewedQuiz().retrieveQuestions()}" var="q" border="1">
+            <h:column>
+                <f:facet name="header"> Topic </f:facet>
+                    #{q.getQuestionTopic()}
+            </h:column>
+
+            <h:column>
+                <f:facet name="header"> Question </f:facet>
+                    #{q.getQuestionText()}
+            </h:column>
+            
+            <h:column>
+                <f:facet name="header"> Your Answer </f:facet>
+                #{q.retrieveAnswer(quiz.getViewedQuiz().getQuizId()).getText()}
+            </h:column>
+                        
+            <h:column>
+                <f:facet name="header"> Correct Answer </f:facet>
+                #{q.getCorrectAnswer().getText()}
+            </h:column>
+            
+            <h:column>
+                <f:facet name="header"> Correct </f:facet>
+                #{q.retrieveAnswer(quiz.getViewedQuiz().getQuizId()).getCorrectness()}
+            </h:column>
+            
+            <h:column>
+                <f:facet name="header"> Misconception </f:facet>
+                <h:form>
+                    <h:commandButton value="Get Help" rendered="#{!q.retrieveAnswer(quiz.getViewedQuiz().getQuizId()).isCorrect()}" action="#{q.retrieveAnswer(quiz.getViewedQuiz().getQuizId()).viewMisconception()}" />
+                </h:form>
+            </h:column>
+        </h:dataTable>
+        
+        <br></br>
+        <h2>Misconceptions Found</h2>
+        
+        <h:dataTable value="#{quiz.getALlMisconceptions(quiz.getViewedQuiz().getQuizId())}" var="m" border="1">
+            <h:column>
+                <f:facet name="header"> Misconception </f:facet>
+                    #{m.getText()}
+            </h:column>
+            
+            <h:column>
+                <f:facet name="header"> Number of Times Missed </f:facet>
+                #{m.getCount()}
+            </h:column>
+        </h:dataTable>
+        <h:form>
+            <h:commandButton value="Done" action="#{quiz.done()}" />
+        </h:form>
+    </h:body>
+</html>

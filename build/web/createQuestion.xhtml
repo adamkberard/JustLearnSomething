@@ -1,0 +1,58 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+    <h:head>
+        <link href="css/stylesheet.css" rel="stylesheet" type="text/css" />
+        <title>Create Question</title>
+        <h1>Create Questions Screen</h1>
+    </h:head>
+    <h:body>
+        <h:form>
+            <h:panelGrid columns="3">
+            Question Topic: <h:selectOneMenu value="#{question.questionTopic}">
+                                <f:selectItems value="#{question.topics}"/>
+                            </h:selectOneMenu>
+                            <h:message for="questionText" style="color:red;margin:8px;"/>
+            
+            Question Text:  <h:inputText value="#{question.questionText}" required ="true"
+                                        requiredMessage="Your must enter a question."
+                                        id="questionText"/>
+                            <h:message for="questionText" style="color:red;margin:8px;"/>
+                            
+            Answer 1:       <h:inputText value="#{question.answerOneText}" 
+                                         id="answerOneText"/>                            
+            <h:selectOneMenu value="#{question.answerOneCorrect}">
+                            <f:selectItems value="#{question.getAnswerChoices()}"/>
+                                </h:selectOneMenu>
+            
+            Answer 2:       <h:inputText value="#{question.answerTwoText}" 
+                                         id="answerTwoText"/>                            
+            <h:selectOneMenu value="#{question.answerTwoCorrect}">
+                            <f:selectItems value="#{question.getAnswerChoices()}"/>
+                                </h:selectOneMenu>
+            
+            Answer 3:       <h:inputText value="#{question.answerThreeText}" 
+                                         id="answerThreeText"/>                            
+            <h:selectOneMenu value="#{question.answerThreeCorrect}">
+                            <f:selectItems value="#{question.getAnswerChoices()}"/>
+                                </h:selectOneMenu>
+            
+            Answer 4:       <h:inputText value="#{question.answerFourText}" 
+                                         id="answerFourText"/>                            
+            <h:selectOneMenu value="#{question.answerFourCorrect}">
+                            <f:selectItems value="#{question.getAnswerChoices()}"/>
+                                </h:selectOneMenu>
+                            
+                            
+                            
+            
+                            
+                <h:commandButton value = "Create" action="#{question.go}"/>
+            </h:panelGrid>
+        </h:form>   
+    </h:body>
+</html>
+
+

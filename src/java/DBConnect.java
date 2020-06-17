@@ -13,13 +13,12 @@ import java.sql.SQLException;
  * @author stanchev
  */
 public class DBConnect {
-
+    
     public Connection getConnection() {
         Connection connection = null;
         try {
             connection = DriverManager.getConnection(
-                    "jdbc:postgresql://ambari-node5.csc.calpoly.edu/teams2", "teams2",
-                    "366database");
+                    "jdbc:postgresql://localhost:5432/aberard?user=dummy&password=pass4dummy");
         } catch (SQLException e) {
             System.out.println("Connection Failed! Check output console");
             e.printStackTrace();

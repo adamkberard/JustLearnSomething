@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"   xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core">
+    <h:head>
+        <link href="css/stylesheet.css" rel="stylesheet" type="text/css" />
+        <h1>Quizzes</h1>
+    </h:head>
+
+    <h:body>
+        <h:dataTable value="#{quiz.getQuizzes()}" var="q" border="1">
+            <h:column>
+                <f:facet name="header"> ID </f:facet>
+                    #{q.quizId}
+            </h:column>
+
+            <h:column>
+                <f:facet name="header"> Number Questions </f:facet>
+                    #{q.numQuestions}
+            </h:column>
+            
+            <h:column>
+                <f:facet name="header"> Number Correct </f:facet>
+                    #{q.numCorrect}
+            </h:column>
+            
+            <h:column>
+                <f:facet name="header"> Percent Correct </f:facet>
+                    #{q.numCorrect/q.numQuestions * 100}
+            </h:column>
+            
+            <h:column>
+                <f:facet name="header"> </f:facet>
+                <h:form>
+                    <h:commandButton value="View Quiz Details" action="#{q.view()}"/>
+                </h:form>
+            </h:column>
+            
+        </h:dataTable>
+    </h:body>
+</html>

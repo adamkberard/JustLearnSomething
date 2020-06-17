@@ -1,0 +1,24 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+    <h:head>
+        <link href="css/stylesheet.css" rel="stylesheet" type="text/css" />
+        <h1>Main Screen</h1>
+    </h:head>
+    
+    <h:body>
+        <h:form>
+            What do you want to do? 
+                    <h:selectOneMenu value="#{mainPage.choice}">
+                        <f:selectItems value="#{mainPage.getChoices()}"/>
+                    </h:selectOneMenu>
+                    <h:commandButton value = "Go" action="#{mainPage.transition()}"/>
+        </h:form>
+        <h:form>
+            <h:commandButton value = "Logout" action="#{mainPage.logout()}"/>
+        </h:form>
+    </h:body>
+</html>
+

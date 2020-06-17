@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"   xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core">
+    <h:head>
+        <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+        <script id="MathJax-script"
+                src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
+        </script>
+        <link href="css/stylesheet.css" rel="stylesheet" type="text/css" />
+        <h1>Quiz</h1>
+    </h:head>
+
+    <h:body>
+        <h:dataTable value="#{quiz.getQuizQuestions()}" var="q" border="1">
+            <h:column>
+                <f:facet name="header"> Topic </f:facet>
+                    #{q.questionTopic}
+            </h:column>
+
+            <h:column>
+                <f:facet name="header"> Question </f:facet>
+                    #{q.questionText}
+            </h:column>
+            
+            <h:column>
+                <f:facet name="header"> Your Answer </f:facet>
+                    #{q.getChosenAns().getText()}
+            </h:column>
+            
+            <h:column>
+                <f:facet name="header"> </f:facet>
+                <h:form>
+                    <h:commandButton value="Answer Question" action="#{q.goToQuestion()}"/> 
+                </h:form>
+            </h:column>
+        </h:dataTable>
+        <h:form>
+            <h:commandButton value="Submit Quiz" 
+                             action="#{quiz.submit()}"
+                             rendered="#{quiz.isDone()}"/>
+        </h:form>
+    </h:body>
+</html>

@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"   xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core">
+    <h:head>
+        <link href="css/stylesheet.css" rel="stylesheet" type="text/css" />
+        <h1>Create Quiz</h1>
+    </h:head>
+
+    <h:body>
+        <h:dataTable value="#{quiz.getAllPossibleQuestions()}" var="q" border="1">
+            <h:column>
+                <f:facet name="header"> ID </f:facet>
+                    #{q.questionId}
+            </h:column>
+
+            <h:column>
+                <f:facet name="header"> Question Topic </f:facet>
+                    #{q.questionTopic}
+            </h:column>
+            
+            <h:column>
+                <f:facet name="header"> Question Text </f:facet>
+                    #{q.questionText}
+            </h:column>
+            
+            <h:column>
+                <f:facet name="header"> </f:facet>
+                <h:form>
+                    <h:commandButton value="Add Question" action="#{quiz.addQuestionToCreatedQuiz(q.questionId)}"/>
+                </h:form>
+            </h:column>    
+        </h:dataTable>
+        
+        <br></br><br></br>
+        <h2>Questions in Quiz</h2>
+        <h:dataTable value="#{quiz.getAllIncludedQuestions()}" var="q" border="1">
+            <h:column>
+                <f:facet name="header"> ID </f:facet>
+                    #{q.questionId}
+            </h:column>
+
+            <h:column>
+                <f:facet name="header"> Question Topic </f:facet>
+                    #{q.questionTopic}
+            </h:column>
+            
+            <h:column>
+                <f:facet name="header"> Question Text </f:facet>
+                    #{q.questionText}
+            </h:column>
+            
+            <h:column>
+                <f:facet name="header"> </f:facet>
+                <h:form>
+                    <h:commandButton value="Remove Question" action="#{quiz.removeQuestionToCreatedQuiz(q.questionId)}"/>
+                </h:form>
+            </h:column>
+        </h:dataTable>
+        <h:form>
+            <h:panelGrid columns="3">
+
+                Test Name: <h:inputText value="#{quiz.quizToBeNamed}" required ="true"
+                                        requiredMessage="Your must enter a test name."
+                                        id="test_name"/>
+                <h:message for="test_name" style="color:red;margin:8px;"/>
+            </h:panelGrid>
+            <h:commandButton value="Create Quiz" action="#{quiz.createCustomQuiz()}"/>
+        </h:form>
+    </h:body>
+</html>

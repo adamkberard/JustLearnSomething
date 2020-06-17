@@ -4,6 +4,13 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Calendar;
+import javax.annotation.ManagedBean;
+import javax.faces.application.FacesMessage;
+import javax.faces.bean.SessionScoped;
+import javax.faces.component.UIComponent;
+import javax.faces.context.FacesContext;
+import javax.faces.validator.ValidatorException;
+import javax.inject.Named;
 
 /*
  * To change this license header, choose License Headers in Project Properties.
@@ -15,19 +22,27 @@ import java.util.Calendar;
  *
  * @author aberard
  */
+@Named(value = "validation")
+@SessionScoped
+@ManagedBean
 public class Validation {
     
-    private static DBConnect dbConnect = new DBConnect();
+    private DBConnect dbConnect = new DBConnect();
+    private String passwordErrorMessage;
+    private String usernameErrorMessage;
+
+    public String getPasswordErrorMessage() {return passwordErrorMessage;}
+    public String getUsernameErrorMessage() {return usernameErrorMessage;}
     
-    
-    public static String validateUsername(String username) throws SQLException{
+    public void validateUsername(FacesContext context, UIComponent component, Object value) throws SQLException{
         Connection con = dbConnect.getConnection();
+        String username = value.toString();
         
         if (con == null) {
             throw new SQLException("Can't get database connection");
         }
         PreparedStatement ps = con.prepareStatement(
-                        "SElECT customer.id FROM customer WHERE customer.username = ?");
+                        "SElECT uid FROM users WHERE username = ?");
         ps.setString(1, username);
         
         ResultSet result = ps.executeQuery();
@@ -35,70 +50,31 @@ public class Validation {
         if(result.next()) {
             result.close();
             con.close();
-            return "Username is already taken.";
-        }
-        ps = con.prepareStatement(
-                        "SELECT employee.id FROM employee WHERE employee.username = ?");
-        ps.setString(1, username);
-        
-        result = ps.executeQuery();
-
-        if(result.next()) {
-            result.close();
-            con.close();
-            return "Username is already taken.";
+            usernameErrorMessage = "Username is already taken.";
+            FacesMessage errorMessage = new FacesMessage(usernameErrorMessage);
+            throw new ValidatorException(errorMessage);
         }
         
         if(username.replace(" ", "").length() != username.length()){
-            return "No spaces allowed in usernames.";
+            usernameErrorMessage = "No spaces allowed in usernames you weirdo.";
+            FacesMessage errorMessage = new FacesMessage(usernameErrorMessage);
+            throw new ValidatorException(errorMessage);
         }
-        
-        return "valid";
     }
     
-    public static String validateUsername(String username, int id) throws SQLException{
-        Connection con = dbConnect.getConnection();
+    public void validatePassword(FacesContext context, UIComponent component, Object value) throws SQLException{
+        String password = value.toString();
         
-        if (con == null) {
-            throw new SQLException("Can't get database connection");
-        }
-        PreparedStatement ps = con.prepareStatement(
-                        "SElECT customer.id FROM customer WHERE customer.username = ? AND customer.id != ?");
-        ps.setString(1, username);
-        ps.setInt(2, id);
-        
-        ResultSet result = ps.executeQuery();
-
-        if(result.next()) {
-            result.close();
-            con.close();
-            return "Username is already taken.";
-        }
-        ps = con.prepareStatement(
-                        "SELECT employee.id FROM employee WHERE employee.username = ? AND employee.id != ?");
-        ps.setString(1, username);
-        ps.setInt(2, id);
-        
-        result = ps.executeQuery();
-
-        if(result.next()) {
-            System.out.println("Here");
-            System.out.println(result.getString("id"));
-            result.close();
-            con.close();
-            return "Username is already taken.";
-        }
-        return "valid";
-    }
-    
-    public static String validatePassword(String password) {
         if(password.length() < 6){
-            return "Password must be six characters long,";
+            passwordErrorMessage = "Password must be six characters long,";
+            FacesMessage errorMessage = new FacesMessage(passwordErrorMessage);
+            throw new ValidatorException(errorMessage);
         }
         if(!(Validation.containsDigit(password))){
-            return "Password must contain at least one number.";
-        }
-        return "valid";
+            passwordErrorMessage = "Password must contain at least one number.";
+            FacesMessage errorMessage = new FacesMessage(passwordErrorMessage);
+            throw new ValidatorException(errorMessage);
+        }        
     }
         
     public static boolean containsDigit(final String aString){

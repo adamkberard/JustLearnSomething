@@ -27,31 +27,31 @@ import javax.inject.Named;
 @Named(value = "login")
 @SessionScoped
 @ManagedBean
-public class Login implements Serializable {
-
-    private String username;
+public class Login implements Serializable {    
     private DBConnect dbConnect = new DBConnect();
    
-    private String password;
-    
-    private boolean isEmployee;
-    private boolean isAdmin;
-    private boolean isCustomer;
-    private int id = 0;
-    
     private UIInput loginUI;
-
-    public boolean isEmployee() {return isEmployee;}
-    public boolean isAdmin() {return isAdmin;}
-    public boolean isCustomer(){return isCustomer;}
-    public int getId() {return id;}
-    public void setId(int id) {this.id = id;}
+    
+    private String username = "";
+    private String password = "";
+    private String firstName = "";
+    private String lastName = "";
+    private String role = "";
+    private int uid = 0;
+    
+    /* Getters and setters */
+    public boolean isStudent() {
+        return this.role.equals("student");}
+    public boolean isTeacher(){return this.role.equals("teacher") || this.role.equals("admin");}
+    public boolean isAdmin() {return this.role.equals("admin");}
     public UIInput getLoginUI() {return loginUI;}
     public void setLoginUI(UIInput loginUI) {this.loginUI = loginUI;}
     public String getUsername() {return username;}
     public void setUsername(String username) {this.username = username;}
     public String getPassword() {return password;}
     public void setPassword(String password) {this.password = password;}
+    public int getUid() {return uid;}
+    
 
     public void validate(FacesContext context, UIComponent component, Object value)
             throws ValidatorException, SQLException {
@@ -66,53 +66,32 @@ public class Login implements Serializable {
 
         PreparedStatement ps
                 = con.prepareStatement(
-                        "select customer.id from customer where customer.username = ? AND customer.password = ?");
+                        "SELECT * FROM users WHERE username = ? AND password = ?");
         ps.setString(1, username);
         ps.setString(2, password);
+        //get user data from database
         
-        //get customer data from database
-
         ResultSet result = ps.executeQuery();
-
+        
         if(result.next()) {
-            id = result.getInt("id");
+            uid = result.getInt("uid");
+            firstName = result.getString("first_name");
+            lastName = result.getString("last_name");
+            role = result.getString("role");
             result.close();
             con.close();
-            isEmployee = false;
-            isAdmin = false;
-            isCustomer = true;
-            return; 
         }
-        
-        ps = con.prepareStatement(
-                        "select employee.id, employee.is_admin from employee where employee.username = ? AND employee.password = ?");
-        ps.setString(1, username);
-        ps.setString(2, password);
-        
-        result = ps.executeQuery();
-
-        if(result.next()) {
-            id = result.getInt("id");
-            isAdmin = result.getBoolean("is_admin");
-            result.close();
-            con.close();
-            isEmployee = true;
-            isCustomer = false;
-            return; 
+        else{
+            FacesMessage errorMessage = new FacesMessage("Wrong login/password");
+            throw new ValidatorException(errorMessage);
         }
-        
-        FacesMessage errorMessage = new FacesMessage("Wrong login/password");
-        throw new ValidatorException(errorMessage);       
     }
 
     public String go() {
-        
-        //Util.invalidateUserSession();
         return "success";
     }
      
     public String register() {
-        //Util.invalidateUserSession();
         return "register";
     }
     
